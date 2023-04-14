@@ -1,0 +1,22 @@
+LOGIN
+- http://127.0.0.1:8000/auth/token/login
+- http://127.0.0.1:8000/auth/logout
+
+CATEGORIES
+- http://127.0.0.1:8000/api/categories/create
+- http://127.0.0.1:8000/api/categories/list
+- http://127.0.0.1:8000/api/categories/detail/<uuid:category_id>
+- http://127.0.0.1:8000/api/categories/update/<uuid:category_id>
+- http://127.0.0.1:8000/api/categories/delete/<uuid:category_id>
+
+MENUITEM
+- http://127.0.0.1:8000/api/menuitems/create
+- http://127.0.0.1:8000/api/menuitems/list
+- http://127.0.0.1:8000/api/menuitems/detail/<uuid:menuitem_id>
+- http://127.0.0.1:8000/api/menuitems/update/<uuid:menuitem_id>
+- http://127.0.0.1:8000/api/menuitems/delete/<uuid:menuitem_id>
+
+CART 
+- http://127.0.0.1:8000/api/carts/create-cart (POST/GET)
+- http://127.0.0.1:8000/api/carts/view-cart (GET)
+- http://127.0.0.1:8000/api/carts/checkout (POST/GET)
