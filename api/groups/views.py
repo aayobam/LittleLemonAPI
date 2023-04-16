@@ -1,48 +1,84 @@
-from logging import Manager
-from urllib import response
-from requests import Response
 from rest_framework import generics, status
+from rest_framework.response import Response
 from django.contrib.auth.models import User, Group
-from .serializers import UserSerializer, GroupSerializer, AddUserToGroupSerializer
-from django.shortcuts import get_object_or_404
-from django.contrib.auth.models import User, Group
-from rest_framework.permissions import IsAuthenticated, IsAdminUser
+from api.common.permissions import AdminPermission, ManagerPermission
+from .serializers import UserSerializer, GroupSerializer, AddUserToGroupSerializer, RemoveFromGroupSerializer
 
 
-class AddUserToGroupView(generics.UpdateAPIView):
+class UserListView(generics.ListAPIView):
+    """
+    Fetch user records.
+    """
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
+    permission_classes = [ManagerPermission | AdminPermission]
+
+
+class GroupListCreateView(generics.ListCreateAPIView):
+    """
+    Fetch and create groups.
+    """
+    queryset = Group.objects.all()
+    serializer_class = GroupSerializer
+    permission_classes = [ManagerPermission | AdminPermission]
+
+    def perform_create(self, serializer):
+        serializer.save()
+
+
+class AddUserToGroupView(generics.CreateAPIView):
+    """
+    Adds users to groups.
+    """
+    queryset = User.objects.all()
     serializer_class = AddUserToGroupSerializer
+    permission_classes = [ManagerPermission]
 
-    def get_object(self):
-        group = get_object_or_404(Group, pk=self.kwargs['pk'])
-        user_id = self.request.data.get('user_id')
-        user = get_object_or_404(User, id=user_id)
-        return (user, group)
+    def get(self, request):
+        response = self.queryset.all()
+        serializer = UserSerializer(response, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
-    def put(self, request, pk):
-        user, group = self.get_object()
-        user.group = group
-        user.save()
-        return Response(status=204)
+    def post(self, request, *args, **kwargs):
+        serializer = self.serializer_class(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        username = serializer.validated_data.get('username', None)
+        groups = serializer.validated_data.get('groups', [])
+        user_obj = User.objects.get(username=username)
+        for group in groups:
+            if user_obj.groups.filter(name=group).exists():
+                return Response({"message": f"{user_obj} already exist in {group} group"})
+            user_obj.groups.add(group)
+        response_data = {
+            "success":True,
+            "message": f"{user_obj} added to {group} group successfull",
+            "data":serializer.data 
+        }
+        return Response(response_data, status=status.HTTP_201_CREATED)
 
 
-class ListGroupUsersView(generics.ListAPIView):
-    serializer_class = UserSerializer
-    permission_classes = [IsAuthenticated, IsAdminUser]
+class RemoveUserFromGroupView(generics.GenericAPIView):
+    """
+    Removes user from group.
+    """
+    queryset = User.objects.all()
+    serializer_class = RemoveFromGroupSerializer
+    permission_classes = [ManagerPermission]
 
-    def get_queryset(self):
-        group = get_object_or_404(Group, pk=self.kwargs['pk'])
-        return User.objects.filter(group=group)
+    def post(self, request, *args, **kwargs):
+        serializer = self.serializer_class(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        username = serializer.validated_data.get('username', None)
+        groups = serializer.validated_data.get('groups', [])
+        user_obj = User.objects.get(username=username)
+        for group in groups:
+            if not user_obj.groups.filter(name=group).exists():
+                return Response({"message": f"{user_obj} is not in {group} group"})
+            user_obj.groups.remove(group)
+        response_data = {
+            "success":True,
+            "message": f"{user_obj} removed from {group} group successfull",
+            "data":serializer.data 
+        }
+        return Response(response_data, status=status.HTTP_200_OK)
 
-
-class DeleteUserFromGroupView(generics.DestroyAPIView):
-    serializer_class = UserSerializer
-    permission_classes = [IsAuthenticated, IsAdminUser]
-
-    def get_queryset(self):
-        group = get_object_or_404(Group, pk=self.kwargs['pk'])
-        return User.objects.filter(group=group)
-
-    def delete(self, request, pk, user_id):
-        user = get_object_or_404(self.get_queryset(), id=user_id)
-        user.delete()
-        return Response(status=204)

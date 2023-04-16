@@ -12,14 +12,13 @@ from django_filters.rest_framework import DjangoFilterBackend
 class CreateMenuItemView(generics.CreateAPIView):
     queryset = MenuItem.objects.all()
     serializer_class = MenuItemSerializer
-    permission_classes = [IsAuthenticated, IsAdminUser]
+    permission_classes = [IsAdminUser]
 
 
 class MenuItemListView(generics.ListAPIView):
     queryset = MenuItem.objects.all()
     serializer_class = MenuItemSerializer
     filterset_class = MenuItemFilter
-    permission_classes = [IsAuthenticated, IsAdminUser]
     filter_backends = [SearchFilter, DjangoFilterBackend]
     search_fields = ['category__title', 'price', 'title']
     throttle_classes = [CustomUserThrottle]

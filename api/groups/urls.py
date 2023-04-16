@@ -3,7 +3,8 @@ from .import views
 
 
 urlpatterns = [
-    path('add-user/', views.AddUserToGroupView.as_view(), name='add_user_to_group'),
-    path('<int:pk>/users/', views.ListGroupUsersView.as_view(), name='list_all_users_per_group'),
-    path('groups/<int:pk>/users/<int:user_id>/', views.ListGroupUsersView.as_view(), name='delete_user_from_group'),
+    path('users/list', views.UserListView.as_view(), name='user_list'),
+    path('create-group', views.GroupListCreateView.as_view(), name='group_list'),
+    path('add-user-to-group', views.AddUserToGroupView.as_view(), name="add_user_to_group"),
+    path('remove-user-from-group', views.RemoveUserFromGroupView.as_view(), name='remove_user_from_group'),
 ]

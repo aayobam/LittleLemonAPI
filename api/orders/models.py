@@ -1,3 +1,4 @@
+from django.urls import reverse
 from django.db import models
 from django.contrib.auth.models import User
 from api.common.models import TimeStampedModel
@@ -10,3 +11,7 @@ class Order(TimeStampedModel):
 
     def __str__(self):
         return f"Order with {self.id}"
+    
+    def get_absolute_url(self):
+        return reverse("order_detail", kwargs={"order_id": self.id})
+    

@@ -1,0 +1,19 @@
+1.	The admin can assign users to the manager group
+
+2.	You can access the manager group with an admin token
+
+6.	Managers can update the item of the day
+
+7.	Managers can assign users to the delivery crew
+
+8.	Managers can assign orders to the delivery crew
+
+9.	The delivery crew can access orders assigned to them
+
+10.	The delivery crew can update an order as delivered
+
+15.	Customers can browse menu items by category
+
+16.	Customers can paginate menu items
+
+17.	Customers can sort menu items by price

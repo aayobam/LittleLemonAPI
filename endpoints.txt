@@ -1,4 +1,4 @@
-LOGIN
+AUTH
 - http://127.0.0.1:8000/auth/token/login
 - http://127.0.0.1:8000/auth/logout
 
@@ -15,8 +15,15 @@ MENUITEM
 - http://127.0.0.1:8000/api/menuitems/detail/<uuid:menuitem_id>
 - http://127.0.0.1:8000/api/menuitems/update/<uuid:menuitem_id>
 - http://127.0.0.1:8000/api/menuitems/delete/<uuid:menuitem_id>
+- http://127.0.0.1:8000/api/menuitems/list?category_title__iexact=mobile+phones
 
 CART 
 - http://127.0.0.1:8000/api/carts/create-cart (POST/GET)
 - http://127.0.0.1:8000/api/carts/view-cart (GET)
 - http://127.0.0.1:8000/api/carts/checkout (POST/GET)
+
+GROUPS
+- http://127.0.0.1:8000/api/groups/users/list
+- http://127.0.0.1:8000/api/groups/create-group
+- http://127.0.0.1:8000/api/groups/add-user-to-group
+- http://127.0.0.1:8000/api/groups/remove-user-from-group
