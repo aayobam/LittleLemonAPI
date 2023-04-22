@@ -1,7 +1,7 @@
 from rest_framework import generics, status
 from rest_framework.response import Response
 from django.contrib.auth.models import User, Group
-from api.common.permissions import AdminPermission, ManagerPermission
+from api.common.permissions import ManagerPermission
 from .serializers import UserSerializer, GroupSerializer, AddUserToGroupSerializer, RemoveFromGroupSerializer
 
 
@@ -11,7 +11,7 @@ class UserListView(generics.ListAPIView):
     """
     queryset = User.objects.all()
     serializer_class = UserSerializer
-    permission_classes = [ManagerPermission | AdminPermission]
+    permission_classes = [ManagerPermission]
 
 
 class GroupListCreateView(generics.ListCreateAPIView):
@@ -20,7 +20,7 @@ class GroupListCreateView(generics.ListCreateAPIView):
     """
     queryset = Group.objects.all()
     serializer_class = GroupSerializer
-    permission_classes = [ManagerPermission | AdminPermission]
+    permission_classes = [ManagerPermission]
 
     def perform_create(self, serializer):
         serializer.save()
@@ -47,11 +47,11 @@ class AddUserToGroupView(generics.CreateAPIView):
         user_obj = User.objects.get(username=username)
         for group in groups:
             if user_obj.groups.filter(name=group).exists():
-                return Response({"message": f"{user_obj} already exist in {group} group"})
+                return Response({"message": f"{user_obj} already exist in the {group} group"})
             user_obj.groups.add(group)
         response_data = {
             "success":True,
-            "message": f"{user_obj} added to {group} group successfull",
+            "message": f"{user_obj} added to the {group} group successfull",
             "data":serializer.data 
         }
         return Response(response_data, status=status.HTTP_201_CREATED)
@@ -73,11 +73,11 @@ class RemoveUserFromGroupView(generics.GenericAPIView):
         user_obj = User.objects.get(username=username)
         for group in groups:
             if not user_obj.groups.filter(name=group).exists():
-                return Response({"message": f"{user_obj} is not in {group} group"})
+                return Response({"message": f"{user_obj} is not in the {group} group"})
             user_obj.groups.remove(group)
         response_data = {
             "success":True,
-            "message": f"{user_obj} removed from {group} group successfull",
+            "message": f"{user_obj} removed from the {group} group successfull",
             "data":serializer.data 
         }
         return Response(response_data, status=status.HTTP_200_OK)

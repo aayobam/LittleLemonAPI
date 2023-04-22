@@ -1,26 +1,32 @@
+from api.orderitems.models import OrderItem
 from .models import Order
 from rest_framework import serializers
 
 
 class OrderSerializer(serializers.ModelSerializer):
-
+    user = serializers.SlugRelatedField(slug_field="username", queryset=Order.objects.all())
     class Meta:
         model = Order
-        fields = ["id", 'total', 'status', 'created_on']
+        fields = ["id", 'user', 'total', 'status', 'created_on']
 
 
 class AddDeliveryCrewToOrderSerializer(serializers.ModelSerializer):
-    id = serializers.UUIDField(read_only=True)
-    total = serializers.ReadOnlyField()
-    status = serializers.ReadOnlyField()
-    created_on = serializers.ReadOnlyField()
-    updated_on = serializers.ReadOnlyField()
+    #id = serializers.SlugRelatedField(slug_field="id", queryset=Order.objects.all())
+    #user = serializers.ReadOnlyField()
+    delivery_crew = serializers.ReadOnlyField(source="delivery_crew")
+
     class Meta:
         model = Order
-        fields = ["id", 'delivery_crew', 'total', 'status', 'created_on', 'updated_on']
+        fields = ["id", 'delivery_crew', 'user', 'created_on', 'updated_on']
 
 
 class UpdateOrderSerializer(serializers.ModelSerializer):
     class Meta:
         model = Order
         fields = ['id', 'status', 'created_on', 'updated_on']
+
+
+class OrderItemSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = OrderItem
+        fields = ['order', 'menuitem', 'unit_price', 'quantity', 'price']

@@ -2,14 +2,14 @@ from .models import Category
 from rest_framework import generics
 from .serializers import CategorySerializer
 from api.common.throttles import CustomUserThrottle
-from rest_framework.permissions import IsAuthenticated, IsAdminUser
+from api.common.permissions import ManagerPermission
 
 
 
 class CreateCategoryView(generics.CreateAPIView):
     queryset = Category.objects.all()
     serializer_class = CategorySerializer
-    permission_classes = [IsAdminUser]
+    permission_classes = [ManagerPermission]
 
 
 class CategoryListView(generics.ListAPIView):
@@ -21,7 +21,6 @@ class CategoryListView(generics.ListAPIView):
 class CategoryDetailView(generics.RetrieveAPIView):
     queryset = Category.objects.all()
     serializer_class = CategorySerializer
-    permission_classes = [IsAdminUser]
     lookup_field = "id"
     lookup_url_kwarg = "category_id"
 
@@ -29,7 +28,7 @@ class CategoryDetailView(generics.RetrieveAPIView):
 class UpdateCategoryView(generics.UpdateAPIView):
     queryset = Category.objects.all()
     serializer_class = CategorySerializer
-    permission_classes = [IsAdminUser]
+    permission_classes = [ManagerPermission]
     lookup_field = "id"
     lookup_url_kwarg = "category_id"
 
@@ -37,6 +36,6 @@ class UpdateCategoryView(generics.UpdateAPIView):
 class DeleteCategoryView(generics.DestroyAPIView):
     queryset = Category.objects.all()
     serializer_class = CategorySerializer
-    permission_classes = [IsAdminUser]
+    permission_classes = [ManagerPermission]
     lookup_field = "id"
     lookup_url_kwarg = "category_id"
