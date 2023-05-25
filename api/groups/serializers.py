@@ -17,6 +17,7 @@ class GroupSerializer(serializers.ModelSerializer):
         read_only_fields = ['id']
 
 
+# For managers to add staffs to groups.
 class AddUserToGroupSerializer(serializers.Serializer):
     username = serializers.SlugRelatedField(slug_field="username", queryset=User.objects.all())
     groups = serializers.SlugRelatedField(slug_field="name", queryset=Group.objects.all(), many=True)
@@ -24,6 +25,8 @@ class AddUserToGroupSerializer(serializers.Serializer):
     class Meta:
         fields =['username', 'groups']
 
+
+# For manager to remove staffs from groups.
 class RemoveFromGroupSerializer(serializers.Serializer):
     username = serializers.SlugRelatedField(slug_field="username", queryset=User.objects.all())
     groups = serializers.SlugRelatedField(slug_field="name", queryset=Group.objects.all(), many=True)
