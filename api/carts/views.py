@@ -12,6 +12,9 @@ from rest_framework.views import APIView
 
 
 class AddItemsToCartView(APIView):
+    """
+    supply product id or select product from browsable api view to add product to cart. you cabt add products twice.
+    """
     serializer_class = CartSerializer
     
     def get(self, request):
@@ -29,6 +32,9 @@ class AddItemsToCartView(APIView):
 
 
 class ViewCartItems(APIView):
+    """
+    Fetched card items records by logged in user eho added the items to the cart.
+    """
     serializer_class = CartSerializer
     
     def get(self, request):
@@ -40,6 +46,11 @@ class ViewCartItems(APIView):
     
 
 class CheckoutView(generics.GenericAPIView):
+    """
+    This fetches all the items in the cart and helps you place your order.
+    It saves collects the items on the cart, saves them on the order item
+    model and also associate them to their respective orders.
+    """
     queryset = Cart.objects.all()
     serializer_class = CheckoutSerializer
 
