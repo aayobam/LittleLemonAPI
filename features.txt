@@ -1,9 +1,1 @@
-6.	Managers can update the item of the day
 
-8.	Managers can assign orders to the delivery crew
-
-9.	The delivery crew can access orders assigned to them
-
-10.	The delivery crew can update an order as delivered
-
-16.	Customers can paginate menu items
