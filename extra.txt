@@ -1,1 +1,0 @@
-if request.user.groups.filter(name=Admin).exists()
