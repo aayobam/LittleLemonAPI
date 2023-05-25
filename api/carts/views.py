@@ -13,7 +13,7 @@ from rest_framework.views import APIView
 
 class AddItemsToCartView(APIView):
     """
-    supply product id or select product from browsable api view to add product to cart. you cabt add products twice.
+    supply product id or select product from browsable api view to add product to cart. you cannot add same products twice.
     """
     serializer_class = CartSerializer
     
