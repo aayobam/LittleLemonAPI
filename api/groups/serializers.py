@@ -10,6 +10,7 @@ class UserSerializer(serializers.ModelSerializer):
         fields = ('id', 'username', 'email', 'groups')
 
 
+# To perform crud on Group.
 class GroupSerializer(serializers.ModelSerializer):
     class Meta:
         model = Group
