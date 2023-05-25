@@ -11,8 +11,6 @@ class OrderSerializer(serializers.ModelSerializer):
 
 
 class AddDeliveryCrewToOrderSerializer(serializers.ModelSerializer):
-    #id = serializers.SlugRelatedField(slug_field="id", queryset=Order.objects.all())
-    #user = serializers.ReadOnlyField()
     delivery_crew = serializers.ReadOnlyField(source="delivery_crew")
 
     class Meta:
