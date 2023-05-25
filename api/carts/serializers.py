@@ -3,6 +3,7 @@ from decimal import Decimal
 from rest_framework import serializers
 
 
+# Cart serializers to perform post and put.
 class CartSerializer(serializers.ModelSerializer):
     user = serializers.HiddenField(default=serializers.CurrentUserDefault())
     quantity = serializers.IntegerField()
@@ -12,7 +13,7 @@ class CartSerializer(serializers.ModelSerializer):
         fields = ['user', 'menuitem', 'quantity']
         validators = [
             serializers.UniqueTogetherValidator(
-                queryset=model.objects.all(),
+                queryset=Cart.objects.all(),
                 fields=('user', 'menuitem'),
                 message=("Item already exist in cart.")
             )
@@ -21,7 +22,6 @@ class CartSerializer(serializers.ModelSerializer):
     def validate(self, data):
         quantity = data.get('quantity')
         menuitem = data.get('menuitem')
-        print(f"ITEM IN SERIALIZER: {menuitem}")
         if quantity <= 0:
             raise serializers.ValidationError("quantity cannot be less than 1.")
         return data
@@ -39,6 +39,7 @@ class CartSerializer(serializers.ModelSerializer):
         return cart
 
 
+# Simply for fetching cart item records
 class FetchCartSerializer(serializers.ModelSerializer):
     menuitem = serializers.ReadOnlyField(source="menuitem.id")
     user = serializers.ReadOnlyField(source="user.username")
@@ -60,10 +61,11 @@ class FetchCartSerializer(serializers.ModelSerializer):
         cart = Cart.objects.create(**validated_data)
         return cart
 
- 
+
+# Fetches items on cart and place the order.
 class CheckoutSerializer(serializers.ModelSerializer):
     """
-    This returns no form feed as data are been fetched from the cart table based
+    This returns no form feed has data are been fetched from the cart table based
     on currently logged in user_id to place orders.
     """
     class Meta:
