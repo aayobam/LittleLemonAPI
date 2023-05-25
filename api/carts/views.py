@@ -77,7 +77,9 @@ class CheckoutView(generics.GenericAPIView):
             price = Decimal(item["price"])
             item_obj = get_object_or_404(MenuItem, id=str(item["menuitem"]))
             if not item_obj:
-                return Response({"message": "Item not found in stock"})
+                return Response({"message": f"{item_obj} is not in stock"})
+            
+            # Adds items to orderitems table and associates them with their respective orders.
             order_items = OrderItem.objects.create(order=order, menuitem=item_obj, quantity=item["quantity"], unit_price=unit_price, price=price)
             order_items.save()
 
