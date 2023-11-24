@@ -33,7 +33,7 @@ class AddItemsToCartView(APIView):
 
 class ViewCartItems(APIView):
     """
-    Fetched card items records by logged in user eho added the items to the cart.
+    Fetched cart items records by logged in user who added the items to the cart.
     """
     serializer_class = CartSerializer
     
@@ -48,7 +48,7 @@ class ViewCartItems(APIView):
 class CheckoutView(generics.GenericAPIView):
     """
     This fetches all the items in the cart and helps you place your order.
-    It saves collects the items on the cart, saves them on the order item
+    It collects the items on the cart, saves them on the order item
     model and also associate them to their respective orders.
     """
     queryset = Cart.objects.all()
